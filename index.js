@@ -12,6 +12,7 @@ const logger = require('./utils/logger');
 const authJWT = require('./api/libs/auth');
 const config = require('./config');
 const errorHandler = require('./api/libs/errorHandler');
+let cors = require("cors");
 
 const passport = require('passport');
 passport.use(authJWT);
@@ -30,15 +31,10 @@ mongoose.connection.on('error', () => {
 });
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.raw({ type: 'image/*', limit: '8mb' }));
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+
 app.use(
   morgan('short', {
     stream: {
