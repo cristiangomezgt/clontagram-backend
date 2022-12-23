@@ -32,6 +32,13 @@ mongoose.connection.on('error', () => {
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.raw({ type: 'image/*', limit: '8mb' }));
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 app.use(
   morgan('short', {
     stream: {
@@ -67,7 +74,11 @@ if (process.env.NODE_ENV === 'development') {
     logger.info(`Escuchando en el puerto ${config.puerto}.`);
   });
 } else {
-  app.listen();
+/*   app.listen();
+ */  server = app.listen(config.puerto, () => {
+    logger.info(`Escuchando en el puerto else ${config.puerto}.`);
+
+  });
 }
 
 module.exports = {
